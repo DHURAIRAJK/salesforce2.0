@@ -1,0 +1,85 @@
+# This is a basic workflow to help you get started with Actions.
+
+name: Salesforce
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "sit" ]
+  pull_request:
+    branches: [ "sit" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    #- name: Set up Node.js
+    #  uses: actions/setup-node@v3
+    #  with:
+    #    node-version: '14'
+
+    #- name: Install dependencies
+    #  run: npm install
+
+    #- name: Run tests
+    #  run: npm test
+
+    #- name: Run PMD analysis
+    #  run: |
+    #    Invoke-WebRequest -Uri "https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.39.0/pmd-bin-6.39.0.zip" -OutFile "pmd-bin-6.39.0.zip"
+    #    Expand-Archive -Path "pmd-bin-6.39.0.zip" -DestinationPath "."
+    #    .\pmd-bin-6.39.0\bin\pmd.bat -d ./src -R rulesets/apex/quickstart.xml -f text
+
+    #- name: Check code quality
+    #  id: code-quality
+    #  run: |
+    #    npm run lint
+    #    $quality = (npm run quality-check)  # Assuming quality-check script returns a percentage
+    #    echo "QUALITY=$quality" >> $env:GITHUB_ENV
+
+    - name: Create pull request
+      if: github.ref == 'refs/heads/SIT'
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: SIT
+        base: main
+        title: 'SIT to main PR'
+        body: 'Auto-generated PR from SIT branch'
+
+   # - name: Deploy if quality is above 75%
+   #   if: env.QUALITY > 75
+   #   run: echo "Code quality is above 75%, proceeding with deployment..."
+
+    #- name: Setup Salesforce CLI
+    #  uses: forcedotcom/cli-action@v1
+
+    - name: Login to Salesforce developer environment
+      run: |
+        sfdx auth:jwt:grant --clientid ${{ secrets.SF_DEV_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_DEV_USERNAME }} --instanceurl https://login.salesforce.com
+
+    - name: Deploy to Salesforce developer environment
+      run: sfdx force:source:deploy -p force-app/main/default
+
+    - name: Login to Salesforce SIT environment
+      run: |
+        sfdx auth:jwt:grant --clientid ${{ secrets.SF_SIT_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_SIT_USERNAME }} --instanceurl https://test.salesforce.com
+
+    - name: Deploy to Salesforce SIT environment
+      run: sfdx force:source:deploy -p force-app/main/default
+
+    - name: Login to Salesforce PROD environment
+      run: |
+        sfdx auth:jwt:grant --clientid ${{ secrets.SF_PROD_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_PROD_USERNAME }} --instanceurl https://login.salesforce.com
+
+    - name: Deploy to Salesforce PROD environment
+      run: sfdx force:source:deploy -p force-app/main/default
