@@ -6,9 +6,9 @@ name: Salesforce
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "SIT" ]
+    branches: [ "sit" ]
   pull_request:
-    branches: [ "SIT" ]
+    branches: [ "sit" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
