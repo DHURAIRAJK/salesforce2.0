@@ -66,7 +66,7 @@ jobs:
 
     - name: Login to Salesforce developer environment
       run: |
-        sfdx auth:jwt:grant --clientid ${{ secrets.SF_DEV_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_DEV_USERNAME }} --instanceurl https://login.salesforce.com
+         auth:jwt:grant --clientid ${{ secrets.SF_DEV_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_DEV_USERNAME }} --instanceurl https://login.salesforce.com
 
     - name: Deploy to Salesforce developer environment
       run: sfdx force:source:deploy -p force-app/main/default
