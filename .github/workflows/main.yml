@@ -6,9 +6,9 @@ name: Salesforce
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "sit" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "sit" ]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -66,7 +66,7 @@ jobs:
 
     - name: Login to Salesforce developer environment
       run: |
-        sfdx force:auth:jwt:grant --clientid ${{ secrets.SF_DEV_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_DEV_USERNAME }} --instanceurl https://login.salesforce.com
+        sfdx auth:jwt:grant --clientid ${{ secrets.SF_DEV_CLIENT_ID }} --jwtkeyfile ${{ secrets.SF_JWT_KEY }} --username ${{ secrets.SF_DEV_USERNAME }} --instanceurl https://login.salesforce.com
 
     - name: Deploy to Salesforce developer environment
       run: sfdx force:source:deploy -p force-app/main/default
