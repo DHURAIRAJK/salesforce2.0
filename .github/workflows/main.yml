@@ -6,9 +6,9 @@ name: Salesforce
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "sit" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "sit" ]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -62,6 +62,7 @@ jobs:
 
     #- name: Setup Salesforce CLI
     #  uses: forcedotcom/cli-action@v1
+    
 
     - name: Login to Salesforce developer environment
       run: |
